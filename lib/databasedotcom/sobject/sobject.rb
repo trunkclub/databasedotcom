@@ -80,6 +80,8 @@ module Databasedotcom
         selection_attr = self.Id.nil? ? "createable" : "updateable"
         self.class.description["fields"].select { |f| f[selection_attr] }.collect { |f| f["name"] }.each { |attr| attr_hash[attr] = self.send(attr) }
 
+        attr_hash.delete_if { |key, value| key.to_s == "Name" } if attr_hash["IsPersonAccount"] && attr_hash["IsPersonAccount"] == true
+
         if self.Id.nil?
           self.client.create(self.class, attr_hash)
         else
